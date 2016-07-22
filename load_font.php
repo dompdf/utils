@@ -152,6 +152,7 @@ function install_font_family($dompdf, $fontname, $normal, $bold = null, $italic 
     
     $font_obj = Font::load($dest);
     $font_obj->saveAdobeFontMetrics("$entry_name.ufm");
+    $font_obj->close();
 
     $entry[$var] = $entry_name;
   }
@@ -166,7 +167,20 @@ function install_font_family($dompdf, $fontname, $normal, $bold = null, $italic 
 // If installing system fonts (may take a long time)
 if ( $_SERVER["argv"][1] === "system_fonts" ) {
   $fontMetrics = $dompdf->getFontMetrics();
-  $fonts = $fontMetrics->getSystemFonts();
+  $files = glob("/usr/share/fonts/truetype/*.ttf") +
+    glob("/usr/share/fonts/truetype/*/*.ttf") +
+    glob("/usr/share/fonts/truetype/*/*/*.ttf") +
+    glob("C:\\Windows\\fonts\\*.ttf") +
+    glob("C:\\WinNT\\fonts\\*.ttf") +
+    glob("/mnt/c_drive/WINDOWS/Fonts/");
+  $fonts = array();
+  foreach ($files as $file) {
+      $font = Font::load($file);
+      $records = $font->getData("name", "records");
+      $type = $this->getType($records[2]);
+      $fonts[mb_strtolower($records[1])][$type] = $file;
+      $font->close();
+  }
   
   foreach ( $fonts as $family => $files ) {
     echo " >> Installing '$family'... \n";
