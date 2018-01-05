@@ -1,6 +1,6 @@
 <?php
 // 1. [Required] Point to the composer or dompdf autoloader
-require_once "autoload.inc.php";
+require_once "vendor/autoload.php";
 
 // 2. [Optional] Set the path to your font directory
 //    By default dopmdf loads fonts to dompdf/lib/fonts
