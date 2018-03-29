@@ -177,7 +177,7 @@ if ( $_SERVER["argv"][1] === "system_fonts" ) {
   foreach ($files as $file) {
       $font = Font::load($file);
       $records = $font->getData("name", "records");
-      $type = $this->getType($records[2]);
+      $type = $fontMetrics->getType($records[2]);
       $fonts[mb_strtolower($records[1])][$type] = $file;
       $font->close();
   }
