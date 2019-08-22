@@ -57,7 +57,7 @@ if ( $_SERVER["argc"] < 3 && @$_SERVER["argv"][1] != "system_fonts" ) {
   usage();
 }
 
-$dompdf = new DOMPDF();
+$dompdf = new Dompdf();
 if (isset($fontDir) && realpath($fontDir) !== false) {
   $dompdf->getOptions()->set('fontDir', $fontDir);
 }
@@ -69,6 +69,7 @@ if (isset($fontDir) && realpath($fontDir) !== false) {
  * files are located, ttf versions of the font are copied to the fonts
  * directory.  Changes to the font lookup table are saved to the cache.
  *
+ * @param Dompdf $dompdf      dompdf main object 
  * @param string $fontname    the font-family name
  * @param string $normal      the filename of the normal face font subtype
  * @param string $bold        the filename of the bold face font subtype
