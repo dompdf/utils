@@ -101,23 +101,25 @@ function install_font_family($dompdf, $fontname, $normal, $bold = null, $italic 
   }
 
   // Try $file_Bold.$ext etc.
-  $path = "$dir/$file";
-  
-  $patterns = array(
-    "bold"        => array("_Bold", "b", "B", "bd", "BD"),
-    "italic"      => array("_Italic", "i", "I"),
-    "bold_italic" => array("_Bold_Italic", "bi", "BI", "ib", "IB"),
+  $path = preg_replace('/(:?[_-]?Regular|[_-]R)$/', '', "$dir/$file");
+  $separators = array("", "_", "-");
+  $suffixes = array(
+    "bold"        => array("Bold", "b", "B", "bd", "BD"),
+    "italic"      => array("Italic", "i", "I", "RI"),
+    "bold_italic" => array("BoldItalic", "Bold_Italic", "bi", "BI", "ib", "IB"),
   );
-  
-  foreach ($patterns as $type => $_patterns) {
+
+  foreach ($suffixes as $type => $type_suffixes) {
     if ( !isset($$type) || !is_readable($$type) ) {
-      foreach($_patterns as $_pattern) {
-        if ( is_readable("$path$_pattern$ext") ) {
-          $$type = "$path$_pattern$ext";
-          break;
+      foreach ($type_suffixes as $suffix) {
+        foreach ($separators as $separator) {
+          if ( is_readable("$path$separator$suffix$ext") ) {
+            $$type = "$path$separator$suffix$ext";
+            break;
+          }
         }
       }
-      
+
       if ( is_null($$type) )
         echo ("Unable to find $type face file.\n");
     }
