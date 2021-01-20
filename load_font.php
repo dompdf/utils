@@ -101,12 +101,15 @@ function install_font_family($dompdf, $fontname, $normal, $bold = null, $italic 
   }
 
   // Try $file_Bold.$ext etc.
-  $path = "$dir/$file";
+  $normal_patterns = [
+    '-Regular'
+  ];
+  $path = "$dir/".str_replace($normal_patterns, '', $file);
   
   $patterns = array(
-    "bold"        => array("_Bold", "b", "B", "bd", "BD"),
-    "italic"      => array("_Italic", "i", "I"),
-    "bold_italic" => array("_Bold_Italic", "bi", "BI", "ib", "IB"),
+    "bold"        => array("_Bold", "-Bold", "b", "B", "bd", "BD"),
+    "italic"      => array("_Italic", "-Italic", "i", "I"),
+    "bold_italic" => array("_Bold_Italic", "-BoldItalic", "bi", "BI", "ib", "IB"),
   );
   
   foreach ($patterns as $type => $_patterns) {
@@ -137,7 +140,8 @@ function install_font_family($dompdf, $fontname, $normal, $bold = null, $italic 
     if ( !is_readable($src) )
       throw new Exception("Requested font '$src' is not readable");
 
-    $dest = $dompdf->getOptions()->get('fontDir') . '/' . basename($src);
+    $dest_file = ($var == 'normal' ? str_replace($normal_patterns, '', basename($src)) : basename($src));
+    $dest = $dompdf->getOptions()->get('fontDir') . '/' . $dest_file;
 
     if ( !is_writeable(dirname($dest)) )
       throw new Exception("Unable to write to destination '$dest'.");
