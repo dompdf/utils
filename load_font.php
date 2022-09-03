@@ -57,10 +57,11 @@ if ( $_SERVER["argc"] < 3 && @$_SERVER["argv"][1] != "system_fonts" ) {
   usage();
 }
 
-$dompdf = new Dompdf();
+$options = new Options();
 if (isset($fontDir) && realpath($fontDir) !== false) {
-  $dompdf->getOptions()->set('fontDir', $fontDir);
+  $options->set('fontDir', $fontDir);
 }
+$dompdf = new Dompdf($options);
 
 /**
  * Installs a new font family
